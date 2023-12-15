@@ -4,7 +4,7 @@ public class Request {
 
     public static String get_status_lan = "http://localhost:5000/api/upload";
     public static String get_status_wan = "http://103.93.216.26:8037/api/Employee/GetEmployeeDashboardStatusById?EmpId=51646";
-    public static String post_mark_attendance_lan = "http://192.168.74.37:5000/api/upload/";
+    public static String post_mark_attendance_lan = "http://192.168.74.37:5000/api/upload";
     public static String post_mark_attendance_wan = "http://103.93.216.26:8037/api/Employee/MarkAttendance?EmpId=51646";
     public static String emp_id = "51646";
     public static String device_id = "b3e9e4ab8985c9fd";

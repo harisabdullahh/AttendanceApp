@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.google.android.material.button.MaterialButton;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -92,14 +93,12 @@ public class MainActivity extends AppCompatActivity {
     protected void initView() {
 
         //Initializtion
-        get_button = findViewById(R.id.get_button);
         post_button = findViewById(R.id.post_button);
         _date_text = findViewById(R.id.date_text);
         _time_text = findViewById(R.id.time_text);
         _post_text = findViewById(R.id.post_text);
         _settings_button = findViewById(R.id.settings_button);
         _progressBar1 = findViewById(R.id.progressBar1);
-        _progressBar2 = findViewById(R.id.progressBar2);
         _card_prompt = findViewById(R.id.card_prompt);
         _time_in_text = findViewById(R.id.time_in_text);
 
@@ -107,27 +106,29 @@ public class MainActivity extends AppCompatActivity {
 
         //Action
         _progressBar1.setVisibility(View.GONE);
-        _progressBar2.setVisibility(View.GONE);
+//        _progressBar2.setVisibility(View.GONE);
         _card_prompt.setVisibility(View.GONE);
 
 
         //Listeners
-        get_button.setOnClickListener(v -> {
-            if(!hold_button){
-                get_button.setVisibility(View.GONE);
-                _progressBar2.setVisibility(View.VISIBLE);
-                get_pressed = true;
-//                ping();
-//                if(use_wan){
-//                    makeGetRequest(get_status_wan);
-//                } else {
-//                    makeGetRequest(get_status_lan);
-//                }
-            }
-        });
+//        get_button.setOnClickListener(v -> {
+//            if(!hold_button){
+//                get_button.setVisibility(View.GONE);
+//                _progressBar2.setVisibility(View.VISIBLE);
+//                get_pressed = true;
+////                ping();
+////                if(use_wan){
+////                    makeGetRequest(get_status_wan);
+////                } else {
+////                    makeGetRequest(get_status_lan);
+////                }
+//            }
+//        });
 
         post_button.setOnClickListener(v -> {
 
+            post_button.setVisibility(View.GONE);
+            _progressBar1.setVisibility(View.VISIBLE);
             sendPostRequest();
 //            ping();
 
@@ -229,69 +230,28 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void sendPostRequest() {
-        String deviceId = device_id;
         String convertedImage = (part1 + part2 + part3 + part4 + part5 + part6 + part7 + part8 + part9 + part10 + part11 + part12 + part13 + part14 + part15 + part16 + part17 + part18 + part19 + part20 + part21 + part22 + part23 + part24);
-        if(debug)
-            Log.d("Tracking: ", convertedImage);
         PostRequestTask.PostRequestCallback callback = new PostRequestTask.PostRequestCallback() {
             @Override
             public void onSuccess(String result) {
-//                Log.d("Tracking: ", "Success: " + result);
                 post_button.setVisibility(View.VISIBLE);
                 _progressBar1.setVisibility(View.GONE);
                 get_pressed = true;
-//                ping();
                 setPrompt("Attendance Marked");
-
-                Handler handler = new Handler();
-                _updateRunnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        if(debug)
-                            Log.d("Handler: ", "run start");
-                        setPrompt("");
-                        handler.postDelayed(this, 3000);
-                        handler.removeCallbacks(_updateRunnable);
-                        if(debug)
-                            Log.d("Handler: ", "handler ended");
-                    }
-                };
-                if(debug)
-                    Log.d("Handler: ", "outside runnable");
-                handler.postDelayed(_updateRunnable, 3000);
-
             }
 
             @Override
             public void onError() {
-//                Log.d("Tracking: ", "Error");
                 post_button.setVisibility(View.VISIBLE);
                 _progressBar1.setVisibility(View.GONE);
                 setPrompt("Error");
-
-                Handler handler = new Handler();
-                _updateRunnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        if(debug)
-                            Log.d("Handler: ", "run start");
-                        setPrompt("");
-                        handler.postDelayed(this, 3000);
-                        handler.removeCallbacks(_updateRunnable);
-                        if(debug)
-                            Log.d("Handler: ", "handler ended");
-                    }
-                };
-                if(debug)
-                    Log.d("Handler: ", "outside runnable");
-                handler.postDelayed(_updateRunnable, 3000);
-
             }
         };
 
-        new PostRequestTask(deviceId, convertedImage, callback).execute();
+        // Assuming you have the base64ImageData, pass it to the constructor
+        PostRequestTask postRequestTask = new PostRequestTask(convertedImage, callback);
+        postRequestTask.execute();
     }
-
 
 
 
