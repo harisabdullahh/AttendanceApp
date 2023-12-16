@@ -1,0 +1,6 @@
+flask
+deepface
+base64
+BytesIO
+os
+tempfile
