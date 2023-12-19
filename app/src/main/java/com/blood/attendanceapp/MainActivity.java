@@ -9,9 +9,12 @@ import androidx.core.content.ContextCompat;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -25,12 +28,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 
@@ -43,6 +48,8 @@ import okhttp3.ResponseBody;
 public class MainActivity extends AppCompatActivity {
 
     private String SHARED_PREFS = "shared_prefs";
+    String convertedImage;
+    private static final int pic_id = 123;
     private boolean debug = false;
     private boolean post_success = false;
     private boolean get_success = false;
@@ -127,9 +134,16 @@ public class MainActivity extends AppCompatActivity {
 
         post_button.setOnClickListener(v -> {
 
-            post_button.setVisibility(View.GONE);
-            _progressBar1.setVisibility(View.VISIBLE);
-            sendPostRequest();
+//            post_button.setVisibility(View.GONE);
+//            _progressBar1.setVisibility(View.VISIBLE);
+//            sendPostRequest();
+
+            Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            // Start the activity with camera_intent, and request pic id
+            startActivityForResult(camera_intent, pic_id);
+
+
+
 //            ping();
 
 //            if(!hold_button){
@@ -230,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void sendPostRequest() {
-        String convertedImage = (part1 + part2 + part3 + part4 + part5 + part6 + part7 + part8 + part9 + part10 + part11 + part12 + part13 + part14 + part15 + part16 + part17 + part18 + part19 + part20 + part21 + part22 + part23 + part24);
+//        String convertedImage = (part1 + part2 + part3 + part4 + part5 + part6 + part7 + part8 + part9 + part10 + part11 + part12 + part13 + part14 + part15 + part16 + part17 + part18 + part19 + part20 + part21 + part22 + part23 + part24);
         PostRequestTask.PostRequestCallback callback = new PostRequestTask.PostRequestCallback() {
             @Override
             public void onSuccess(String result) {
@@ -361,6 +375,26 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 //    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // Match the request 'pic id with requestCode
+        if (requestCode == pic_id) {
+            // BitMap is data structure of image file which store the image in memory
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            photo.compress(Bitmap.CompressFormat.JPEG, 60, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
+            convertedImage = new String(Base64.encodeToString(byteArray, Base64.DEFAULT));
+//            Log.d("Tracking: ", String.valueOf(convertedImage));
+            Log.d("Tracking", "Image captured and saved.");
+            post_button.setVisibility(View.GONE);
+            _progressBar1.setVisibility(View.VISIBLE);
+            sendPostRequest();
+            // Set the image in imageview for display
+//            click_image_id.setImageBitmap(photo);
+        }
+    }
 
     private void updateEarlyDate(String varDate, String varTime) {
         if(debug)

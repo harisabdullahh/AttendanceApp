@@ -46,10 +46,13 @@ public class PostRequestTask extends AsyncTask<Void, Void, String> {
             try (DataOutputStream dos = new DataOutputStream(urlConnection.getOutputStream())) {
                 Log.d("Tracking: ", "inside try");
                 // Construct the JSON payload
-                String jsonPayload = "{\n" +
-                        "  \"image\": \"" + base64ImageData + "\"\n" +
-                        "}";
+//                Log.d("Tracking: ", base64ImageData);
+                String base64ImageDataWithoutLineBreaks = base64ImageData.replaceAll("\\s", "");
 
+                String jsonPayload = "{\n" +
+                        "  \"image\": \"" + base64ImageDataWithoutLineBreaks + "\"\n" +
+                        "}";
+                Log.d("Tracking: ", jsonPayload);
                 // Write the JSON data to the output stream
                 dos.writeBytes(jsonPayload);
                 dos.flush();
