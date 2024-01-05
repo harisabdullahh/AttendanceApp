@@ -73,13 +73,6 @@ public class PostRequestTask extends AsyncTask<Void, Void, String> {
                 }
 
                 Log.d("Tracking: ", "Response: " + response);
-//                try {
-//                    status_result = String.valueOf(responseStatus(String.valueOf(response)));
-//                    Log.d("Tracking: Response Status", status_result);
-//
-//                } catch (JSONException e) {
-//                    throw new RuntimeException(e);
-//                }
                 return response.toString();
             } finally {
                 // Disconnect the connection
@@ -112,13 +105,6 @@ public class PostRequestTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        // Handle the result, for example, update UI or perform other tasks
-
-//        if(status_result.equals("true")){
-//            callback.onSuccess(result);
-//        } else {
-//            callback.onError();
-//        }
 
         Log.d("PostRequestTask", "Response: " + result);
         if (result != null) {

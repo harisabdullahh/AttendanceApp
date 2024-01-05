@@ -50,6 +50,5 @@ public class Activity_Settings extends AppCompatActivity {
 //            Intent i = new Intent(this, MainActivity.class);
 //            startActivity(i);
         });
-
     }
 }
